@@ -1,0 +1,76 @@
+spring:
+  application:
+    name: fusion-los
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://127.0.0.1:27017/fusionlos}
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  address: 127.0.0.1
+  error:
+    include-message: always
+
+los:
+  temporal:
+    address: ${TEMPORAL_ADDRESS:127.0.0.1:7233}
+    namespace: ${TEMPORAL_NAMESPACE:default}
+    tls-cert-path: ${TEMPORAL_TLS_CERT:}
+    tls-key-path: ${TEMPORAL_TLS_KEY:}
+
+  auth:
+    # Signs the session cookie. Set it so sessions survive an API restart.
+    session-secret: ${LOS_SESSION_SECRET:}
+    # Empty: one click sign in. Set it to ask for a shared password on the login page.
+    login-password: ${LOS_LOGIN_PASSWORD:}
+
+  features:
+    # false = worker build v1, true = v2 with the PEP check. Set by scripts/deploy-v2.sh.
+    pep-check: ${LOS_FEATURE_PEP:false}
+
+  active-durations: demo-durations
+  # "This is 7 days in prod." Both sets stay loaded for the side by side view on the Ops screen.
+  duration-profiles:
+    prod-durations:
+      profile: prod-durations
+      reminder-after: 2d
+      escalate-after: 5d
+      offer-expires-after: 7d
+      retry-max-interval: 30s
+      retry-schedule-to-close: 1h
+      stuck-after: 1d
+    demo-durations:
+      profile: demo-durations
+      reminder-after: 20s
+      escalate-after: 45s
+      offer-expires-after: 60s
+      retry-max-interval: 5s
+      retry-schedule-to-close: 10m
+      stuck-after: 2m
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+---
+spring.config.activate.on-profile: api
+server:
+  port: 8080
+
+---
+spring.config.activate.on-profile: worker
+server:
+  port: 8081
+
+---
+spring.config.activate.on-profile: prod-durations
+los:
+  active-durations: prod-durations
+
+---
+spring.config.activate.on-profile: demo-durations
+los:
+  active-durations: demo-durations

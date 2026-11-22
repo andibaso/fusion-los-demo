@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tokens follow the FusionRM design language: Inter, 14px base, tabular numerals,
+   gray 900 sidebar, indigo primary, white cards on a #f9fafb page. */
+@layer base {
+  html {
+    font-variant-numeric: tabular-nums;
+  }
+  body {
+    @apply bg-page font-sans text-ink antialiased;
+    font-size: 14px;
+  }
+  a {
+    @apply text-primary hover:text-primary-hover;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg bg-white shadow-card;
+  }
+  .card-header {
+    @apply flex items-center gap-3 border-b border-line px-6 py-3 text-[14px] font-semibold;
+  }
+  .card-body {
+    @apply px-6 py-4;
+  }
+  .page-title {
+    @apply text-[20px] font-semibold;
+  }
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-md px-4 font-semibold disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary-hover;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-ink ring-1 ring-inset ring-[#d1d5db] hover:bg-[#f9fafb];
+  }
+  .btn-good {
+    @apply btn bg-[#15803d] text-white hover:bg-[#166534];
+  }
+  .btn-danger {
+    @apply btn bg-[#b91c1c] text-white hover:bg-[#991b1b];
+  }
+  .btn-sm {
+    @apply min-h-[36px] px-3 text-[13px];
+  }
+  .input {
+    @apply min-h-[44px] w-full rounded-md border border-[#d1d5db] bg-white px-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] focus:border-primary-ring focus:outline-none focus:ring-[3px] focus:ring-primary-ring/20;
+  }
+  .label {
+    @apply mb-1 block text-[13px] font-medium text-muted;
+  }
+  .badge {
+    @apply inline-flex items-center gap-1 whitespace-nowrap rounded-md px-2 py-1 text-[12px] font-medium ring-1 ring-inset;
+  }
+  .badge-info {
+    @apply badge bg-[#eef2ff] text-[#4338ca] ring-[#4338ca]/20;
+  }
+  .badge-good {
+    @apply badge bg-[#f0fdf4] text-[#15803d] ring-[#15803d]/20;
+  }
+  .badge-due {
+    @apply badge bg-[#fffbeb] text-[#92400e] ring-[#92400e]/20;
+  }
+  .badge-risk {
+    @apply badge bg-[#fef2f2] text-[#b91c1c] ring-[#b91c1c]/20;
+  }
+  .badge-neutral {
+    @apply badge bg-[#f3f4f6] text-[#4b5563] ring-[#4b5563]/20;
+  }
+  .badge-violet {
+    @apply badge bg-[#f5f3ff] text-[#6d28d9] ring-[#6d28d9]/20;
+  }
+  .th {
+    @apply px-6 py-3 text-left text-[12px] font-semibold text-muted;
+  }
+  .td {
+    @apply px-6 py-3;
+  }
+  .dl {
+    @apply grid grid-cols-2 gap-x-4 gap-y-2;
+  }
+  .dl dt {
+    @apply text-[13px] text-muted;
+  }
+  .dl dd {
+    @apply font-medium;
+  }
+  .section-label {
+    @apply text-[11px] font-semibold uppercase tracking-wider text-muted;
+  }
+}
+
+/* Dropdowns: one look everywhere, as in FusionRM. Gray chevron with room, indigo focus ring. */
+select:not([multiple]) {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.17l3.71-3.94a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.125rem;
+  padding-left: 0.875rem;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+select:not([multiple]):focus-visible {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}

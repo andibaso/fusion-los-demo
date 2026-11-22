@@ -1,0 +1,54 @@
+# Local infrastructure for FusionLOS. Every port binds to 127.0.0.1 only.
+# The only entry point is the Vite server on 3003, which proxies /api and /temporal.
+services:
+  temporal:
+    image: temporalio/temporal:1.10.1
+    user: root   # the named volume is root owned; dev server only
+    command:
+      - server
+      - start-dev
+      - --ip=0.0.0.0
+      - --headless
+      - --db-filename=/data/temporal.db
+      - --search-attribute=Stage=Keyword
+      - --search-attribute=Status=Keyword
+      - --search-attribute=Amount=Double
+      - --search-attribute=AssignedTo=Keyword
+    ports:
+      - "127.0.0.1:7233:7233"
+    volumes:
+      - temporal-data:/data
+    healthcheck:
+      test: ["CMD", "temporal", "operator", "cluster", "health", "--address", "127.0.0.1:7233"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  temporal-ui:
+    image: temporalio/ui:2.58.1
+    depends_on:
+      temporal:
+        condition: service_healthy
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+      TEMPORAL_UI_PORT: "8233"
+      TEMPORAL_UI_PUBLIC_PATH: /temporal
+      TEMPORAL_CORS_ORIGINS: ${LOS_PUBLIC_ORIGIN:-http://localhost:3003}
+    ports:
+      - "127.0.0.1:8233:8233"
+
+  mongodb:
+    image: mongo:8.0
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  temporal-data:
+  mongo-data:
